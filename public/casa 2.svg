@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Capa_2" data-name="Capa 2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 118.49 97.21">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #f88;
+      }
+
+      .cls-2 {
+        fill: #948067;
+      }
+
+      .cls-2, .cls-3, .cls-4, .cls-5, .cls-6 {
+        stroke: #000;
+        stroke-miterlimit: 10;
+        stroke-width: 3px;
+      }
+
+      .cls-3 {
+        fill: #6a5365;
+      }
+
+      .cls-4 {
+        fill: #be6b41;
+      }
+
+      .cls-5 {
+        fill: #cbf7ee;
+      }
+
+      .cls-6 {
+        fill: none;
+      }
+    </style>
+  </defs>
+  <polyline class="cls-1" points="15.26 95 15.26 44.19 41.88 17.57 86.07 16.42 110.46 46.8 108.33 47.1 108.33 95.25 14.88 95.13"/>
+  <polyline class="cls-6" points="14.98 46.56 14.98 95.71 109.11 95.71 109.11 46.56"/>
+  <polygon class="cls-3" points="84.43 16.18 50.86 53.84 3.62 53.84 40.96 16.5 84.43 16.18"/>
+  <path class="cls-6" d="M117.31,55.06c-10.21-13.09-20.41-26.17-30.62-39.26"/>
+  <rect class="cls-4" x="47.15" y="1.5" width="13.53" height="22.09" transform="translate(107.84 25.09) rotate(-180)"/>
+  <polygon class="cls-5" points="71.93 42.98 76.42 42.98 76.42 37.93 81.25 37.93 81.25 33.66 89.17 33.66 89.17 37.93 94 37.93 94 42.98 98.49 42.98 98.49 50.89 94 50.89 94 55.93 89.17 55.93 89.17 60.21 81.25 60.21 81.25 55.93 76.42 55.93 76.42 50.89 71.93 50.89 71.93 42.98"/>
+  <line class="cls-6" x1="50.97" y1="54.59" x2="50.97" y2="96.2"/>
+  <rect class="cls-2" x="76.29" y="71.14" width="15.66" height="24.17" transform="translate(168.23 166.45) rotate(-180)"/>
+  <rect x="21.22" y="61.61" width="21.11" height="13.96" transform="translate(63.55 137.18) rotate(-180)"/>
+</svg>

@@ -6,12 +6,15 @@ import React, { useEffect, useRef, useState } from 'react';
 // Ejemplo: player: '/assets/mi_perro.png'
 // ==========================================
 const IMAGE_URLS = {
-  player: 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 50"><rect x="10" y="20" width="20" height="30" fill="%23d2b48c" rx="5"/><circle cx="20" cy="20" r="12" fill="%23d2b48c"/><rect x="10" y="0" width="20" height="15" fill="white" rx="2"/><circle cx="15" cy="18" r="2" fill="black"/><circle cx="25" cy="18" r="2" fill="black"/><path d="M 18 22 Q 20 25 22 22" stroke="black" fill="transparent"/></svg>',
-  bill: 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 15"><rect width="30" height="15" fill="%2322c55e" rx="2"/><rect x="2" y="2" width="26" height="11" fill="%2316a34a" rx="1"/><text x="15" y="11" font-size="10" font-family="Arial" font-weight="bold" fill="white" text-anchor="middle">$</text></svg>',
-  customer: 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40"><circle cx="20" cy="25" r="15" fill="%238b5a2b"/><circle cx="14" cy="20" r="3" fill="black"/><circle cx="26" cy="20" r="3" fill="black"/><path d="M 15 30 Q 20 35 25 30" stroke="black" fill="transparent" stroke-width="2"/><path d="M 5 10 Q 10 0 15 10" fill="%238b5a2b"/><path d="M 35 10 Q 30 0 25 10" fill="%238b5a2b"/></svg>',
-  ball: 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 30"><circle cx="15" cy="15" r="12" fill="%23ef4444"/><circle cx="12" cy="12" r="4" fill="white" opacity="0.3"/></svg>',
-  toy: 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 20"><rect x="10" y="5" width="20" height="10" fill="%23facc15"/><circle cx="10" cy="5" r="5" fill="%23facc15"/><circle cx="10" cy="15" r="5" fill="%23facc15"/><circle cx="30" cy="5" r="5" fill="%23facc15"/><circle cx="30" cy="15" r="5" fill="%23facc15"/></svg>',
-  house: 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 60"><rect x="5" y="20" width="50" height="35" fill="%234b5563"/><path d="M 0 25 L 30 0 L 60 25 Z" fill="%23991b1b"/><rect x="25" y="35" width="10" height="20" fill="%231f2937"/><rect x="10" y="30" width="10" height="10" fill="%2393c5fd"/></svg>',
+  player: '/perro chef.svg',
+  bill: '/dinero.svg',
+  customer1: '/cliente 1.svg',
+  customer2: '/cliente 2.svg',
+  ball: '/pelota.svg',
+  toy: '/hueso.svg',
+  house1: '/casa 1.svg',
+  house2: '/casa 2.svg',
+  menu: '/MENU PERRO CHEF/MENU PERRO CHEF.svg',
 };
 
 const PALETTE: Record<string, string> = {
@@ -60,11 +63,16 @@ export default function App() {
     const imgs = imagesRef.current;
 
     const getRoadCenterX = (y: number, distance: number) => {
-      // Curva fluida pero contenida para que la calle siempre esté centrada y visible
-      // Reducimos la amplitud a 40 para que el complejo de la calle no se salga de los 400px del canvas
-      const fluidCurve = Math.sin((distance - y) * 0.0007) * 40;
-      const slowVariation = Math.sin(distance * 0.0002) * 10;
-      return 200 + fluidCurve + slowVariation;
+      // El punto real en la pista es (distance - y)
+      const trackPos = distance - y;
+      
+      // Curvas variables entre 20° y 50°
+      // Combinación de senos para curvas pronunciadas e impredecibles
+      const curve1 = Math.sin(trackPos * 0.012) * 35;
+      const curve2 = Math.sin(trackPos * 0.018) * 18;
+      const curve3 = Math.sin(trackPos * 0.025) * 7;
+      
+      return 200 + curve1 + curve2 + curve3;
     };
 
     const state = {
@@ -168,8 +176,67 @@ export default function App() {
       if (key === ' ') keys.space = false;
     };
 
+    const handleTouch = (e: TouchEvent) => {
+      if (state.screen !== 'PLAYING') return;
+      e.preventDefault();
+      const rect = canvas.getBoundingClientRect();
+      const touch = e.touches[0];
+      if (!touch) return;
+
+      const tx = ((touch.clientX - rect.left) / rect.width) * 400;
+      const ty = ((touch.clientY - rect.top) / rect.height) * 600;
+
+      // Move towards touch
+      const dx = tx - (state.player.x + state.player.width / 2);
+      const dy = ty - (state.player.y + state.player.height / 2);
+
+      keys.a = dx < -20;
+      keys.d = dx > 20;
+      keys.w = dy < -20;
+      keys.s = dy > 20;
+    };
+
+    const handleTouchEnd = (e: TouchEvent) => {
+      keys.a = keys.d = keys.w = keys.s = false;
+      if (state.screen === 'START' || state.screen === 'GAMEOVER') {
+        e.preventDefault();
+        resetGame();
+        state.screen = 'PLAYING';
+      }
+    };
+
+    const handleCanvasClick = (e: MouseEvent) => {
+      if (state.screen === 'START' || state.screen === 'GAMEOVER') {
+        e.preventDefault();
+        resetGame();
+        state.screen = 'PLAYING';
+      }
+    };
+
+    const handleActionBtn = (e: Event) => {
+      e.preventDefault();
+      if (state.screen === 'START' || state.screen === 'GAMEOVER') {
+        resetGame();
+        state.screen = 'PLAYING';
+      } else if (state.screen === 'PLAYING' && !state.player.isJumping) {
+        state.player.isJumping = true;
+        state.player.jumpTimer = 0.5;
+        checkDelivery();
+      }
+    };
+
     window.addEventListener('keydown', handleKeyDown, { passive: false });
     window.addEventListener('keyup', handleKeyUp);
+    canvas.addEventListener('touchstart', handleTouch, { passive: false });
+    canvas.addEventListener('touchmove', handleTouch, { passive: false });
+    canvas.addEventListener('touchend', handleTouchEnd, { passive: false });
+    canvas.addEventListener('mousedown', handleCanvasClick);
+    
+    const actionBtn = document.getElementById('action-btn');
+    if (actionBtn) {
+      actionBtn.addEventListener('touchstart', handleActionBtn, { passive: false });
+      actionBtn.addEventListener('mousedown', handleActionBtn);
+    }
 
     const checkCollision = (r1: any, r2: any) => {
       const margin = 5;
@@ -208,7 +275,9 @@ export default function App() {
           width: 40,
           height: 40,
           side: side,
-          delivered: false
+          delivered: false,
+          customerType: Math.random() < 0.5 ? 'customer1' : 'customer2',
+          houseType: Math.random() < 0.5 ? 'house1' : 'house2'
         });
       }
     };
@@ -220,8 +289,8 @@ export default function App() {
       let vy = 0;
       if (keys.w) vy = -250;
       else if (keys.s) vy = 250;
-      if (keys.a) vx = -250;
-      else if (keys.d) vx = 250;
+      if (keys.a) vx = -350;
+      else if (keys.d) vx = 350;
 
       state.player.x += vx * dt;
       state.player.y += vy * dt;
@@ -328,7 +397,7 @@ export default function App() {
       ctx.fillRect(0, 0, 400, 600);
 
       // Road and Sidewalks (Smoother rendering with smaller segments)
-      const segmentHeight = 20;
+      const segmentHeight = 10;
       for (let row = -2; row < 600 / segmentHeight + 2; row++) {
         const y = (row * segmentHeight) + (state.distance % segmentHeight);
         const cx = getRoadCenterX(y, state.distance);
@@ -353,10 +422,10 @@ export default function App() {
       for (let customer of state.customers) {
         // House
         const houseX = customer.side === 'left' ? customer.x - 60 : customer.x + 40;
-        ctx.drawImage(imgs.house, houseX, customer.y - 10, 60, 60);
+        ctx.drawImage(imgs[customer.houseType], houseX, customer.y - 10, 60, 60);
         
         // Customer
-        ctx.drawImage(imgs.customer, customer.x, customer.y, customer.width, customer.height);
+        ctx.drawImage(imgs[customer.customerType], customer.x, customer.y, customer.width, customer.height);
         if (customer.delivered) {
           ctx.fillStyle = '#10b981';
           ctx.font = 'bold 16px sans-serif';
@@ -445,18 +514,44 @@ export default function App() {
 
       // Screens
       if (state.screen === 'START') {
-        ctx.fillStyle = 'rgba(0,0,0,0.8)';
-        ctx.fillRect(0, 0, 400, 600);
-        ctx.fillStyle = '#fff';
-        ctx.textAlign = 'center';
-        ctx.font = 'bold 24px "Courier New", monospace';
-        ctx.fillText("DOGGY DELIVERY: STREET RUSH", 200, 250);
-        ctx.font = '16px "Courier New", monospace';
-        ctx.fillText("WASD to move", 200, 300);
-        ctx.fillText("SPACE to jump & deliver orders", 200, 330);
-        ctx.fillStyle = '#fbbf24';
-        ctx.fillText("Press ENTER to start", 200, 400);
-        ctx.textAlign = 'left';
+        if (imgs.menu) {
+          // Draw the menu image covering the canvas
+          // The image is 1080x1920 (9:16), canvas is 400x600 (2:3)
+          // To cover the canvas without stretching, we can calculate dimensions
+          const imgAspect = 1080 / 1920;
+          const canvasAspect = 400 / 600;
+          let drawWidth = 400;
+          let drawHeight = 600;
+          let offsetX = 0;
+          let offsetY = 0;
+          
+          if (canvasAspect > imgAspect) {
+            // Canvas is wider than image
+            drawWidth = 400;
+            drawHeight = 400 / imgAspect;
+            offsetY = (600 - drawHeight) / 2;
+          } else {
+            // Canvas is taller than image
+            drawHeight = 600;
+            drawWidth = 600 * imgAspect;
+            offsetX = (400 - drawWidth) / 2;
+          }
+          
+          ctx.drawImage(imgs.menu, offsetX, offsetY, drawWidth, drawHeight);
+        } else {
+          ctx.fillStyle = 'rgba(0,0,0,0.8)';
+          ctx.fillRect(0, 0, 400, 600);
+          ctx.fillStyle = '#fff';
+          ctx.textAlign = 'center';
+          ctx.font = 'bold 24px "Courier New", monospace';
+          ctx.fillText("DOGGY DELIVERY: STREET RUSH", 200, 250);
+          ctx.font = '16px "Courier New", monospace';
+          ctx.fillText("WASD to move", 200, 300);
+          ctx.fillText("SPACE to jump & deliver orders", 200, 330);
+          ctx.fillStyle = '#fbbf24';
+          ctx.fillText("Press ENTER to start", 200, 400);
+          ctx.textAlign = 'left';
+        }
       } else if (state.screen === 'GAMEOVER') {
         ctx.fillStyle = 'rgba(0,0,0,0.8)';
         ctx.fillRect(0, 0, 400, 600);
@@ -502,8 +597,26 @@ export default function App() {
       cancelAnimationFrame(animationFrameId);
       window.removeEventListener('keydown', handleKeyDown);
       window.removeEventListener('keyup', handleKeyUp);
+      canvas.removeEventListener('touchstart', handleTouch);
+      canvas.removeEventListener('touchmove', handleTouch);
+      canvas.removeEventListener('touchend', handleTouchEnd);
+      canvas.removeEventListener('mousedown', handleCanvasClick);
+      if (actionBtn) {
+        actionBtn.removeEventListener('touchstart', handleActionBtn);
+        actionBtn.removeEventListener('mousedown', handleActionBtn);
+      }
     };
   }, [imagesLoaded]);
+
+  const toggleFullscreen = () => {
+    if (!document.fullscreenElement) {
+      canvasRef.current?.parentElement?.requestFullscreen().catch(err => {
+        console.error(`Error attempting to enable full-screen mode: ${err.message}`);
+      });
+    } else {
+      document.exitFullscreen();
+    }
+  };
 
   if (!imagesLoaded) {
     return (
@@ -514,16 +627,35 @@ export default function App() {
   }
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-zinc-900">
-      <div className="mb-4 text-zinc-400 text-sm max-w-md text-center">
-        Las imágenes se cargan desde URLs configurables en el código. Puedes modificarlas editando el objeto <code className="bg-zinc-800 px-1 rounded">IMAGE_URLS</code> en <code className="bg-zinc-800 px-1 rounded">App.tsx</code>.
+    <div className="flex flex-col items-center justify-center min-h-screen bg-zinc-900 p-4">
+      <div className="mb-4 flex flex-col items-center gap-2">
+        <div className="text-zinc-400 text-xs max-w-md text-center">
+          WASD/Touch para mover. SPACE/Tap para saltar y entregar.
+        </div>
+        <button 
+          onClick={toggleFullscreen}
+          className="px-4 py-2 bg-zinc-800 hover:bg-zinc-700 text-white rounded-full text-sm font-medium transition-colors border border-zinc-700 flex items-center gap-2"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3"/><path d="M21 8V5a2 2 0 0 0-2-2h-3"/><path d="M3 16v3a2 2 0 0 0 2 2h3"/><path d="M16 21h3a2 2 0 0 0 2-2v-3"/></svg>
+          Pantalla Completa
+        </button>
       </div>
-      <canvas
-        ref={canvasRef}
-        width={400}
-        height={600}
-        className="border-4 border-zinc-700 rounded-lg shadow-2xl bg-zinc-800"
-      />
+      <div className="relative w-full max-w-[400px] aspect-[2/3]">
+        <canvas
+          ref={canvasRef}
+          width={400}
+          height={600}
+          className="w-full h-full border-4 border-zinc-700 rounded-lg shadow-2xl bg-zinc-800 touch-none"
+        />
+      </div>
+      <div className="mt-4 w-full max-w-[400px]">
+        <button
+          id="action-btn"
+          className="w-full py-4 bg-emerald-500 hover:bg-emerald-600 active:bg-emerald-700 text-white font-bold text-xl rounded-xl shadow-lg touch-manipulation uppercase tracking-wider select-none"
+        >
+          Entregar / Saltar
+        </button>
+      </div>
     </div>
   );
 }

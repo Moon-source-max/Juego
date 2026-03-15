@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Capa_2" data-name="Capa 2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 56.98 50.02">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #efc9af;
+      }
+
+      .cls-1, .cls-2, .cls-3 {
+        stroke-width: 3px;
+      }
+
+      .cls-1, .cls-2, .cls-3, .cls-4 {
+        stroke: #000;
+        stroke-miterlimit: 10;
+      }
+
+      .cls-5 {
+        fill: #f2f8ec;
+      }
+
+      .cls-2 {
+        fill: #e5cf98;
+      }
+
+      .cls-3, .cls-4 {
+        fill: none;
+      }
+
+      .cls-4 {
+        stroke-width: 7px;
+      }
+
+      .cls-6 {
+        fill: #998d71;
+      }
+    </style>
+  </defs>
+  <polygon class="cls-1" points="13.05 21.11 1.5 21.11 1.5 2.73 11.65 7.52 13.05 21.11"/>
+  <polygon class="cls-1" points="43.93 20.75 55.48 20.75 55.48 2.37 45.33 7.15 43.93 20.75"/>
+  <path class="cls-2" d="M2.85,24.26v9.45l3.32,3.32v3.83l6.57,6.57h6.13l2.39-2.39h14.9l2.79,2.79h5.51l6.23-6.23v-4.38l3.81-3.81v-8.38h-4.17c-.03-3.26-.06-6.51-.1-9.77-1.7.04-3.4.09-5.11.13v-4.6c-2.33-.02-4.66-.04-6.99-.06v-3.89h-19.02v4.02h-7.02v4.02h-5.04c-.04,3.13-.09,6.26-.13,9.38H2.85Z"/>
+  <g>
+    <polygon class="cls-6" points="31.87 38.73 31.87 33.71 23.77 33.71 23.77 38.73 21.69 38.73 21.69 43.67 21.69 48.82 33.95 48.82 33.95 38.73 31.87 38.73"/>
+    <path class="cls-3" d="M31.65,38.05h2.77c-.01,3.49-.03,6.98-.04,10.47h-12.17v-10.38c.91.01,1.82.03,2.72.04"/>
+  </g>
+  <g>
+    <g>
+      <line class="cls-4" x1="22.67" y1="30.95" x2="33.61" y2="30.95"/>
+      <line class="cls-3" x1="28.14" y1="37.59" x2="28.14" y2="31.08"/>
+    </g>
+    <g>
+      <g>
+        <rect x="12.16" y="22.97" width="7.62" height="7.62"/>
+        <rect class="cls-5" x="15.57" y="22.97" width="4.21" height="4.21"/>
+      </g>
+      <g>
+        <rect x="36.71" y="22.97" width="7.62" height="7.62"/>
+        <rect class="cls-5" x="40.12" y="22.97" width="4.21" height="4.21"/>
+      </g>
+    </g>
+  </g>
+</svg>
